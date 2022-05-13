@@ -1,5 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
+  /* From https://css.glass */
+  /* background: rgba(23, 132, 46, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px); */
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
@@ -13,4 +22,28 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+main {
+  min-height: calc(100vh - 5.5rem - 7rem - 1.5rem);
+}
+
+.shelf::after {
+  transform: rotateX(40deg);
+  box-shadow: 0px 15px 25px 10px rgb(138, 138, 138);
+}
+
+.book {
+  box-shadow: 30px 20px 20px rgb(51, 51, 51);
+}
+
+.book::after {
+  transform: perspective(1000px) rotateY(50deg);
+  background-image: linear-gradient(to left, #cacaca 50%, transparent 50%);
+  background-size: 5px 100%;
+  clip-path: polygon(0 0, 0 100%, 100% 99%, 100% 5px);
+}
+
+.rating-container {
+  width: calc(100% - 2rem - 2.14375rem);
 }

@@ -1,0 +1,37 @@
+[
+  {
+    "user": "Anonymous",
+    "subject": "Review Subject",
+    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut mollitia incidunt dolorem amet aliquam reiciendis voluptatem omnis sit voluptates hic velit at, possimus beatae eius aperiam ratione asperiores quod aliquid.",
+    "date": "08-05-2022",
+    "rate": 5
+  },
+  {
+    "user": "Anonymous",
+    "subject": "Review Subject",
+    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut mollitia incidunt dolorem amet aliquam reiciendis voluptatem omnis sit voluptates hic velit at, possimus beatae eius aperiam ratione asperiores quod aliquid.",
+    "date": "08-05-2022",
+    "rate": 4
+  },
+  {
+    "user": "Anonymous",
+    "subject": "Review Subject",
+    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut mollitia incidunt dolorem amet aliquam reiciendis voluptatem omnis sit voluptates hic velit at, possimus beatae eius aperiam ratione asperiores quod aliquid.",
+    "date": "08-05-2022",
+    "rate": 4.5
+  },
+  {
+    "user": "Anonymous",
+    "subject": "Review Subject",
+    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut mollitia incidunt dolorem amet aliquam reiciendis voluptatem omnis sit voluptates hic velit at, possimus beatae eius aperiam ratione asperiores quod aliquid.",
+    "date": "08-05-2022",
+    "rate": 3
+  },
+  {
+    "user": "Anonymous",
+    "subject": "Review Subject",
+    "description": "lorem3",
+    "date": "08-05-2022",
+    "rate": 3.5
+  }
+]
