@@ -116,7 +116,6 @@ export default function Shelf({ books, shelfTitle, shelf, onAddBook }) {
   let renderedContent;
   if (books.length) {
     const getBookStyle = (isDragging, draggableStyle) => ({
-      // background: isDragging ? "lightgreen" : "grey",
       display: "flex",
       alignItems: "flex-end",
       margin: "0 2em",
@@ -143,7 +142,7 @@ export default function Shelf({ books, shelfTitle, shelf, onAddBook }) {
               >
                 <Box
                   boxShadow="2em 5em 60px 1px rgba(115, 115, 117, 0.7)"
-                  backgroundImage={`url(&apos;${img}&apos;)`}
+                  backgroundImage={`url('${img}')`}
                   backgroundRepeat="no-repeat"
                   backgroundSize="cover"
                   w="100%"
