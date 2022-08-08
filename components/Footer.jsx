@@ -12,6 +12,3 @@ export default function Footer() {
     </chakra.footer>
   );
 }
-
-// header {{ base: "4em", md: "8em" }}
-// footer 6em

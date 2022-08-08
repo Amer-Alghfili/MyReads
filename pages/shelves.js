@@ -71,7 +71,7 @@ export default function Shelves({ mountedBooks }) {
               title="Book's shelf updated successfully"
               description={
                 <>
-                  {book.title}'s shelf has been changed from
+                  {book.title}&apos;s shelf has been changed from
                   {
                     <chakra.span fontStyle="italic">
                       {" "}
@@ -104,7 +104,7 @@ export default function Shelves({ mountedBooks }) {
               title="Book added successfully"
               description={
                 <>
-                  Couldn't add book.title to
+                  Couldn&apos;t add book.title to
                   <chakra.span fontStyle="italic"> {shelf} </chakra.span> shelf
                 </>
               }
