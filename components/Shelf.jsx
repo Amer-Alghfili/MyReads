@@ -152,7 +152,7 @@ export default function Shelf({ books, shelfTitle, shelf, onAddBook }) {
                   borderRight="none"
                   borderRadius="0.3em"
                   _after={{
-                    content: "&apos;&apos;",
+                    content: "''",
                     bgGradient:
                       "repeating-linear-gradient(to-r,  #bec2bf, #bec2bf 3px, white 10px, white 1px)",
                     display: "inline-block",
@@ -248,7 +248,7 @@ export default function Shelf({ books, shelfTitle, shelf, onAddBook }) {
         boxShadow={{ base: "2xl", "2xl": "none" }}
         position="relative"
         _before={{
-          content: "&apos;&apos;",
+          content: "''",
           boxShadow: "inset 0 1px 0 #D0A97A",
           bgColor: "#C19A6B",
           bgGradient: "linear-gradient(to bottom, #C19A6B 0%, #B28B5C 100%)",
@@ -260,7 +260,7 @@ export default function Shelf({ books, shelfTitle, shelf, onAddBook }) {
           zIndex: 2,
         }}
         _after={{
-          content: "&apos;&apos;",
+          content: "''",
           bgColor: "#ab8354",
           position: "absolute",
           bottom: 0,
