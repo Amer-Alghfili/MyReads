@@ -1,6 +1,6 @@
 # My Reads
 
-Next application for designed for readers, it allows users to explore new books and organize them easily using digital shelves 📚.
+My Reads is a NextJS application designed for readers, it allows users to explore new books and organize them easily using digital shelves 📚.
 
 ## Downloading instructions
 
