@@ -16,8 +16,8 @@ export default function Hero() {
           </Heading>
           <chakra.p fontSize="1.5em" lineHeight={{ base: 1.3, md: 1.7 }}>
             MyReads allows you to organize your library digitally, our goal is
-            to let you focus on the book you're currently reading and leave the
-            task of organizing other books to us
+            to let you focus on the book you&apos;re currently reading and leave
+            the task of organizing other books to us
           </chakra.p>
           <HStack
             justifyContent={{ base: "center", md: "flex-start" }}

@@ -61,7 +61,7 @@ export default function Shelf({ books, shelfTitle, shelf, onAddBook }) {
             title="Book added successfully"
             description={
               <>
-                Couldn't add {book.title} to
+                Couldn&apos;t add {book.title} to
                 <chakra.span fontStyle="italic"> {shelf} </chakra.span> shelf
               </>
             }
@@ -143,7 +143,7 @@ export default function Shelf({ books, shelfTitle, shelf, onAddBook }) {
               >
                 <Box
                   boxShadow="2em 5em 60px 1px rgba(115, 115, 117, 0.7)"
-                  backgroundImage={`url('${img}')`}
+                  backgroundImage={`url(&apos;${img}&apos;)`}
                   backgroundRepeat="no-repeat"
                   backgroundSize="cover"
                   w="100%"
@@ -152,7 +152,7 @@ export default function Shelf({ books, shelfTitle, shelf, onAddBook }) {
                   borderRight="none"
                   borderRadius="0.3em"
                   _after={{
-                    content: "''",
+                    content: "&apos;&apos;",
                     bgGradient:
                       "repeating-linear-gradient(to-r,  #bec2bf, #bec2bf 3px, white 10px, white 1px)",
                     display: "inline-block",
@@ -184,7 +184,7 @@ export default function Shelf({ books, shelfTitle, shelf, onAddBook }) {
         />
         <Box alignSelf="flex-end">
           <Heading as="h3" mb="2em" fontSize="1.6rem">
-            Unfortunately we couldn't find books on this shelf
+            Unfortunately we couldn&apos;t find books on this shelf
           </Heading>
           <Button
             ref={finalRef}
@@ -248,7 +248,7 @@ export default function Shelf({ books, shelfTitle, shelf, onAddBook }) {
         boxShadow={{ base: "2xl", "2xl": "none" }}
         position="relative"
         _before={{
-          content: "''",
+          content: "&apos;&apos;",
           boxShadow: "inset 0 1px 0 #D0A97A",
           bgColor: "#C19A6B",
           bgGradient: "linear-gradient(to bottom, #C19A6B 0%, #B28B5C 100%)",
@@ -260,7 +260,7 @@ export default function Shelf({ books, shelfTitle, shelf, onAddBook }) {
           zIndex: 2,
         }}
         _after={{
-          content: "''",
+          content: "&apos;&apos;",
           bgColor: "#ab8354",
           position: "absolute",
           bottom: 0,
@@ -405,7 +405,7 @@ export default function Shelf({ books, shelfTitle, shelf, onAddBook }) {
                   h="14em"
                 />
                 <chakra.p mt="2em !important" fontSize="1.6rem" color="#3e823b">
-                  Couldn't find results
+                  Couldn&apos;t find results
                 </chakra.p>
               </VStack>
             )}
