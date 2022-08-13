@@ -1,13 +1,84 @@
-import { Box, chakra, Heading } from "@chakra-ui/react";
+import { Box, chakra, useDisclosure, useToast } from "@chakra-ui/react";
 import Head from "next/head";
 import React from "react";
+import BookActions from "../../components/book-page/BookActions";
+import BookDescription from "../../components/book-page/BookDescription";
+import ShelfOptionModal from "../../components/book-page/ShelfOptionModal";
 import BookInfo from "../../components/BookInfo";
+import Feedback from "../../components/Feedback";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { get } from "../../services/bookAPI";
+import { get, update } from "../../services/bookAPI";
 
 export default function Book({ book }) {
-  const { imageLinks, description } = book;
+  const [newShelf, setNewShelf] = React.useState(book.shelf);
+  // currentShelf used to prevent calling the server for updating shelf if the shelf doesn't change
+  const [currentShelf, setCurrentShelf] = React.useState(book.shelf);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+
+  React.useEffect(
+    function newShelfEffect() {
+      async function updateShelf() {
+        try {
+          await update(book, newShelf);
+          toast({
+            render: (props) => (
+              <Feedback
+                {...props}
+                title="Book shelf changed successfully"
+                message={
+                  <>
+                    {book.title}&apos;s shelf has been changed from
+                    {
+                      <chakra.span fontStyle="italic">
+                        {" "}
+                        {book.shelf}{" "}
+                      </chakra.span>
+                    }
+                    to{" "}
+                    {<chakra.span fontStyle="italic"> {newShelf} </chakra.span>}
+                    successfully
+                  </>
+                }
+              />
+            ),
+            duration: 3000,
+            isClosable: true,
+            position: "top",
+          });
+          setCurrentShelf(newShelf);
+        } catch (err) {
+          toast({
+            render: (props) => (
+              <Feedback
+                {...props}
+                variant="fail"
+                title="Something went wrong while changing shelf"
+                message={
+                  <>
+                    Couldn&apos;t change {book.title} to
+                    <chakra.span fontStyle="italic">
+                      {" "}
+                      {newShelf}{" "}
+                    </chakra.span>{" "}
+                    shelf
+                  </>
+                }
+              />
+            ),
+            duration: 3000,
+            isClosable: true,
+            position: "top",
+          });
+        }
+      }
+      if (isOpen && newShelf != currentShelf) {
+        updateShelf();
+      }
+    },
+    [newShelf]
+  );
 
   return (
     <Box bgColor="#F2F6FF" minH="100vh" color="#454545">
@@ -20,20 +91,30 @@ export default function Book({ book }) {
         <chakra.main p={{ base: "2em", md: "4em" }}>
           <div className="double-container">
             <chakra.section>
-              <BookInfo book={book} />
+              <BookInfo
+                book={book}
+                BookActions={
+                  <BookActions
+                    onPrimaryClick={onOpen}
+                    previewLink={book.previewLink}
+                    shelf={newShelf}
+                  />
+                }
+              />
             </chakra.section>
             <chakra.article mt="6em">
-              <Heading as="h3" color="#3e823b" mb="0.7em" fontSize="2.8rem">
-                Description
-              </Heading>
-              <chakra.p lineHeight="1.7 !important" fontSize="1.2rem">
-                {description}
-              </chakra.p>
+              <BookDescription description={book.description} />
             </chakra.article>
           </div>
         </chakra.main>
       </div>
       <Footer />
+      <ShelfOptionModal
+        isOpen={isOpen}
+        defaultShelf={book.shelf}
+        onClose={onClose}
+        onShelfChange={(newShelf) => setNewShelf(newShelf)}
+      />
     </Box>
   );
 }

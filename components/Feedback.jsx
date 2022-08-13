@@ -11,7 +11,7 @@ export default function Feedback({
   id,
   onClose,
   title,
-  description,
+  message,
   onAddBook,
   variant,
 }) {
@@ -55,7 +55,7 @@ export default function Feedback({
           {title}
         </Heading>
         <chakra.p color={variant == "fail" ? "#edc5cb" : "#454545"}>
-          {description}
+          {message}
         </chakra.p>
       </VStack>
     </HStack>

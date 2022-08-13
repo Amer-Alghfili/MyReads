@@ -1,24 +1,11 @@
-import { SearchIcon, StarIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  chakra,
-  Heading,
-  HStack,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Link,
-  Tag,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, chakra } from "@chakra-ui/react";
 import Head from "next/head";
-import Image from "next/image";
-import NextLink from "next/link";
 import { useEffect, useState } from "react";
+import BooksResults from "../../components/books-page/BookResults";
+import Hero from "../../components/books-page/Hero";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { getAll, search } from "../../services/bookAPI";
-import { extractBookImgSrc } from "../../util/extractBookImgSrc";
 
 export default function Books({ mountedBooks }) {
   const [books, setBooks] = useState(mountedBooks);
@@ -43,45 +30,6 @@ export default function Books({ mountedBooks }) {
     [query]
   );
 
-  function searchHandler(inQuery) {
-    setQuery(inQuery);
-  }
-
-  let renderedBooks;
-  if (books.length > 0) {
-    renderedBooks = books?.map(
-      ({
-        id,
-        title,
-        subtitle,
-        authors,
-        imageLinks,
-        categories,
-        averageRating,
-        shelf,
-        description,
-        previewLink,
-      }) => {
-        const img = extractBookImgSrc(imageLinks);
-        return (
-          <Book
-            key={id}
-            id={id}
-            title={title}
-            subtitle={subtitle}
-            authors={authors}
-            img={img}
-            tags={categories}
-            rating={averageRating}
-            shelf={shelf}
-            description={description}
-            previewLink={previewLink}
-          />
-        );
-      }
-    );
-  }
-
   return (
     <Box bgColor="#F2F6FF" minH="100vh" color="#454545">
       <Head>
@@ -90,156 +38,13 @@ export default function Books({ mountedBooks }) {
       </Head>
       <Header />
       <div className="root">
-        <chakra.section
-          p={{ base: "2em", md: "4em" }}
-          bgImage="linear-gradient(to bottom, rgb(48, 99, 44), rgba(56, 219, 29, 0.2)), url('/assets/book-search.jpg')"
-          transform={{
-            base: "skewY(-3deg)",
-            md: "skewY(-3deg) translateY(-2em)",
-            xl: "skewY(-3deg)",
-          }}
-          color="white"
-        >
-          <div className="double-container">
-            <VStack alignItems="center" transform="skewY(3deg)" m="3em">
-              <Box mb="3em" textAlign="center">
-                <Heading mb="0.5em" fontSize="2.8rem">
-                  Explore new books
-                </Heading>
-                <chakra.p fontSize="1.5rem">
-                  Add new books to your shelves
-                </chakra.p>
-              </Box>
-              <InputGroup w="100%" maxW="29em">
-                <InputLeftElement pointerEvents="none">
-                  <SearchIcon color="white" />
-                </InputLeftElement>
-                <Input
-                  type="search"
-                  placeholder="Search..."
-                  _placeholder={{ color: "white" }}
-                  bgColor="rgba(90, 188, 86, 0.9)"
-                  color="white"
-                  borderRadius="1.2em"
-                  border="none"
-                  value={query}
-                  onChange={(e) => searchHandler(e.target.value)}
-                />
-              </InputGroup>
-            </VStack>
-          </div>
-        </chakra.section>
+        <Hero searchQuery={query} searchChange={setQuery} />
         <chakra.main p={{ base: "2em", md: "4em" }}>
-          <div className="double-container">
-            <Heading as="h3" textAlign="center" fontSize="2em" m="4em 0 3em">
-              Results
-            </Heading>
-            <HStack
-              wrap="wrap"
-              align="stretch"
-              justify="center"
-              me="-3em !important"
-            >
-              {renderedBooks}
-            </HStack>
-          </div>
+          <BooksResults books={books} />
         </chakra.main>
       </div>
       <Footer />
     </Box>
-  );
-}
-
-function Book({ id, title, authors, img, tags, rating }) {
-  const tagsComponent = tags?.map((tag) => (
-    <Tag key={tag} bgColor="#4DB6AC" color="white" p="0.5em" fontSize="0.8rem">
-      {tag}
-    </Tag>
-  ));
-  return (
-    <NextLink href={`/books/${id}`} passHref>
-      <Link
-        _hover={{ textDecoration: "none" }}
-        mb="6em !important"
-        me="3em !important"
-        role="group"
-      >
-        <Box h="100%">
-          <VStack
-            boxShadow="xl"
-            bgGradient="linear(to-br, rgba(77, 182, 172, 0.5), rgba(6, 142, 0, 0.1))"
-            _groupHover={{
-              bgGradient:
-                "linear(to-br, rgba(6, 142, 0, 0.1) , rgba(77, 182, 172, 0.5))",
-            }}
-            _groupFocus={{
-              bgGradient:
-                "linear(to-br, rgba(6, 142, 0, 0.1) , rgba(77, 182, 172, 0.5))",
-            }}
-            w="18em"
-            h="100%"
-            borderRadius="0.7em"
-          >
-            <Box
-              bgGradient="linear(to-br, rgba(77, 182, 172), rgba(6, 142, 0))"
-              w="97%"
-              h="10em"
-              transform="translateY(-1em)"
-              boxShadow="xl"
-              transition="all 0.5s ease-in-out"
-              _groupHover={{
-                transform: "translateX(0)",
-              }}
-              _groupFocus={{
-                transform: "translateX(0)",
-              }}
-              _groupFocusVisible={{
-                transform: "translateX(0)",
-              }}
-              borderRadius="0.5em"
-            >
-              {img ? (
-                <Image
-                  style={{ borderRadius: "0.5em" }}
-                  src={img}
-                  alt={`${title} img`}
-                  layout="fill"
-                  objectFit="cover"
-                  objectPosition="top center"
-                />
-              ) : null}
-            </Box>
-            <VStack
-              p="0 1.5em"
-              mb="1em !important"
-              justify="space-between"
-              textAlign="center"
-              flex="1"
-            >
-              <Box mb="1em">
-                <Heading as="h4" fontSize="1.5rem" mb="0.3em">
-                  {title}
-                </Heading>
-                <Box fontSize="0.8rem" color="rgba(69,69,69,0.7)">
-                  {authors?.join(", ")}
-                </Box>
-                {rating >= 0 ? (
-                  <HStack mt="0.5em" align="center" justify="center">
-                    <StarIcon color="#FFF06B" />
-                    <chakra.span fontWeight="bold !important">
-                      {rating}
-                    </chakra.span>
-                  </HStack>
-                ) : null}
-              </Box>
-              <HStack justify="center" mt="1em">
-                {tagsComponent}
-              </HStack>
-            </VStack>
-          </VStack>
-        </Box>
-      </Link>
-    </NextLink>
   );
 }
 

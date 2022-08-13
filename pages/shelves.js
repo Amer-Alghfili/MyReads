@@ -1,122 +1,36 @@
-import { Box, chakra, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  chakra,
+  Modal,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 import Head from "next/head";
 import React from "react";
 import { DragDropContext, resetServerContext } from "react-beautiful-dnd";
-import Feedback from "../components/Feedback";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import Shelf from "../components/Shelf";
-import { getAll, update } from "../services/bookAPI";
+import SearchModal from "../components/shelf-page/SearchModal";
+import Shelf from "../components/shelf-page/Shelf";
+import ShelfBooks from "../components/shelf-page/ShelfBooks";
+import ShelfHeader from "../components/shelf-page/ShelfHeader";
+import useShelves from "../hooks/manageBookShelves";
+import { getAll } from "../services/bookAPI";
 
 export default function Shelves({ mountedBooks }) {
-  const toast = useToast();
-  const [booksShelves, setBooksShelves] = React.useState(() => {
-    return {
-      currentlyReading: filterBooksByShelf(mountedBooks, "currentlyReading"),
-      read: filterBooksByShelf(mountedBooks, "read"),
-      wantToRead: filterBooksByShelf(mountedBooks, "wantToRead"),
-    };
-  });
+  const { booksShelves, updateBookShelves, addBookToShelves } =
+    useShelves(mountedBooks);
 
-  function filterBooksByShelf(books, shelf) {
-    return books.filter((book) => book.shelf == shelf);
+  const [shelfCode, setShelfCode] = React.useState("");
+  const [shelfTitle, setShelfTitle] = React.useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  function handleSearchModalOpen({ title, code }) {
+    onOpen();
+    setShelfCode(code);
+    setShelfTitle(title);
   }
 
-  async function handleAddBook(book, shelf) {
-    await update(book, shelf);
-    // throw new Error("test");
-    const updatedBooks = await getAll();
-    setBooksShelves({
-      wantToRead: filterBooksByShelf(updatedBooks, "wantToRead"),
-      read: filterBooksByShelf(updatedBooks, "read"),
-      currentlyReading: filterBooksByShelf(updatedBooks, "currentlyReading"),
-    });
-  }
-
-  async function onShelvesUpdate(result) {
-    const { destination, source, draggableId } = result;
-    if (!destination) {
-      return;
-    }
-    if (
-      destination.droppableId == source.draggableId &&
-      destination.index == source.index
-    ) {
-      return;
-    }
-    if (destination.droppableId == source.droppableId) {
-      const shelfBooks = [...booksShelves[source.droppableId]];
-      const [book] = shelfBooks.splice(source.index, 1);
-      shelfBooks.splice(destination.index, 0, book);
-      const newShelves = { ...booksShelves, [source.droppableId]: shelfBooks };
-      setBooksShelves(newShelves);
-    } else {
-      const tempShelves = { ...booksShelves };
-      const sourceShelfBooks = [...booksShelves[source.droppableId]];
-      const [book] = sourceShelfBooks.splice(source.index, 1);
-      const destinationShelfBooks = [...booksShelves[destination.droppableId]];
-      destinationShelfBooks.splice(destination.index, 0, book);
-      const newShelves = {
-        ...booksShelves,
-        [source.droppableId]: sourceShelfBooks,
-        [destination.droppableId]: destinationShelfBooks,
-      };
-      setBooksShelves(newShelves);
-      try {
-        await update(book, destination.droppableId);
-        toast({
-          render: (props) => (
-            <Feedback
-              {...props}
-              title="Book's shelf updated successfully"
-              description={
-                <>
-                  {book.title}&apos;s shelf has been changed from
-                  {
-                    <chakra.span fontStyle="italic">
-                      {" "}
-                      {source.droppableId}{" "}
-                    </chakra.span>
-                  }
-                  to
-                  {
-                    <chakra.span fontStyle="italic">
-                      {" "}
-                      {destination.droppableId}{" "}
-                    </chakra.span>
-                  }
-                  shelf successfully
-                </>
-              }
-            />
-          ),
-          duration: 3000,
-          isClosable: true,
-          position: "top",
-        });
-      } catch (err) {
-        setBooksShelves(tempShelves);
-        toast({
-          render: (props) => (
-            <Feedback
-              {...props}
-              variant="fail"
-              title="Book added successfully"
-              description={
-                <>
-                  Couldn&apos;t add book.title to
-                  <chakra.span fontStyle="italic"> {shelf} </chakra.span> shelf
-                </>
-              }
-            />
-          ),
-          duration: 3000,
-          isClosable: true,
-          position: "top",
-        });
-      }
-    }
-  }
   return (
     <Box bgColor="#F2F6FF" minH="100vh" color="#454545">
       <Head>
@@ -127,25 +41,58 @@ export default function Shelves({ mountedBooks }) {
       <div className="root">
         <chakra.main p={{ base: "2em", md: "4em" }}>
           <div className="double-container">
-            <DragDropContext onDragEnd={onShelvesUpdate}>
+            <DragDropContext onDragEnd={updateBookShelves}>
               <Box position="relative">
                 <Shelf
-                  shelfTitle="Currently Reading"
-                  shelf="currentlyReading"
-                  books={booksShelves.currentlyReading}
-                  onAddBook={(book, shelf) => handleAddBook(book, shelf)}
+                  ShelfHeader={
+                    <ShelfHeader
+                      title="Currently Reading"
+                      code="currentlyReading"
+                      onOpen={handleSearchModalOpen}
+                      isShelfEmpty={booksShelves.currentlyReading.length <= 0}
+                    />
+                  }
+                  ShelfBooks={
+                    <ShelfBooks
+                      books={booksShelves.currentlyReading}
+                      code="currentlyReading"
+                      onModalOpen={(shelf) => onOpen(shelf)}
+                    />
+                  }
                 />
                 <Shelf
-                  shelfTitle="Want to Read"
-                  shelf="wantToRead"
-                  books={booksShelves.wantToRead}
-                  onAddBook={(book, shelf) => handleAddBook(book, shelf)}
+                  ShelfHeader={
+                    <ShelfHeader
+                      title="Want to Read"
+                      code="wantToRead"
+                      onOpen={handleSearchModalOpen}
+                      isShelfEmpty={booksShelves.wantToRead.length <= 0}
+                    />
+                  }
+                  ShelfBooks={
+                    <ShelfBooks
+                      books={booksShelves.wantToRead}
+                      code="wantToRead"
+                      onModalOpen={(shelf) => onOpen(shelf)}
+                    />
+                  }
                 />
                 <Shelf
-                  shelfTitle="Read"
-                  shelf="read"
-                  books={booksShelves.read}
-                  onAddBook={(book, shelf) => handleAddBook(book, shelf)}
+                  ShelfHeader={
+                    <ShelfHeader
+                      title="Read"
+                      code="read"
+                      onOpen={handleSearchModalOpen}
+                      isShelfEmpty={booksShelves.read.length <= 0}
+                    />
+                  }
+                  ShelfBooks={
+                    <ShelfBooks
+                      books={booksShelves.read}
+                      code="read"
+                      onModalOpen={(shelf) => onOpen(shelf)}
+                    />
+                  }
                 />
               </Box>
             </DragDropContext>
@@ -153,6 +100,17 @@ export default function Shelves({ mountedBooks }) {
         </chakra.main>
       </div>
       <Footer />
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <SearchModal
+          shelfCode={shelfCode}
+          shelfTitle={shelfTitle}
+          isOpen={isOpen}
+          onAddBook={(book) =>
+            addBookToShelves(book, { shelfCode, shelfTitle })
+          }
+        />
+      </Modal>
     </Box>
   );
 }
